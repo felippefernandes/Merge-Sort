@@ -1,32 +1,34 @@
 .section .data	
 	
-titulo: 	.asciz "\n *** PROGRAMA Merge Sort 1.0 *** \n \n"
+titulo: 	.asciz	"\n *** PROGRAMA Merge Sort 1.0 *** \n \n"
 
-pedeTam:	.asciz "\nDigite o tamanho do vetor (0 < TAM <= 20) => \n"
+pedeTam:	.asciz	"\nDigite o tamanho do vetor (0 < TAM <= 20) => \n"
 
-pedeNumero: 	.asciz "\nInsira primeiro elemento %d => \n"
+pedeNumero: 	.asciz	"\nInsira primeiro elemento %d => \n"
 
-leituraVetor: 	.asciz "\n LEITURA DO VETOR: \n"
+leituraVetor: 	.asciz	"\n LEITURA DO VETOR: \n"
 
-vetorLido: 	.asciz "\n VETOR %d LIDO! \n"
+vetorLido: 	.asciz	"\n VETOR %d LIDO! \n"
 
-formatoIn: 	.asciz "%d"
+formatoIn: 	.asciz	"%d"
 
-formatoOut: 	.asciz "%d"
+formatoOut: 	.asciz	"%d"
 
-pulalinha: 	.asciz "\n"
+pulalinha: 	.asciz	"\n"
 
-limpaBuffer:	.string "%*c"
+limpaBuffer:	.string	"%*c"
 
-maxTam:		.int 20
+maxTam:		.int	20
 	
-tamanho: 	.int 0
+tamanho: 	.int 	0
 
-n:		.int 0
+n:		.int 	0
 
-num: 		.int 0
+num: 		.int 	0
 
-vetor: 		.space 204 
+naloc:		.int 	84
+
+vetor: 		.space 	204 
 
 
 .section .text
@@ -95,6 +97,14 @@ _start:
 	pushl $titulo
 	call printf
 	addl $4, %esp
+
+	movl	naloc, %ecx
+	pushl	%ecx
+	call	malloc
+	movl	%eax, tamanho
+
+
+
 	
 le_n:
 	pushl $pedeTam
@@ -128,3 +138,5 @@ fim:
 	call scanf
 	pushl $0
 	call exit
+
+
