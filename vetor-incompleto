@@ -1,0 +1,163 @@
+.section .data
+
+titulo:		.asciz	"\n*** Programa Merge Sort 1.0 *** \n\n"
+
+leituraVetor:	.asciz	"\nLeitura do vetor %d =>\n"
+
+vetorLido:	.asciz	"\nVetor lido\n"
+
+pedeTam:	.asciz	"\nInsira o Tamanho do Vetor ( Maximo = 20 ) = > "
+
+formato:	.asciz	"%d"
+
+formato2:	.asciz	"%d"
+
+pedeNumero:	.asciz	"\nInsira primeiro elemento %d => "
+
+mostraElem:	.asciz	"\nElementos Lidos => "
+
+mostraElem2:	.asciz	"%d"
+
+pulaLinha:	.asciz	"\n"
+
+maxTam:		.int	20
+
+tamanho:	.int	0
+
+elemento:	.int	0
+
+n:		.int	0
+
+vetor:		.space	80	#4 bytes para cada numero a ser armazenado
+
+limpaBuffer:	.string	"%*c"
+
+
+.section .text
+
+mostraVet:
+
+	pushl	%edi	
+	pushl	%ecx
+	movl	(%edi), %eax
+	pushl	%eax
+	pushl	$formato2
+	call 	printf
+	addl	$8, %esp
+	popl	%ecx
+	popl	%edi
+	addl	$4, %edi
+	loop	mostraVet
+	pushl	$pulaLinha
+	call	printf
+	addl	$4, %esp
+	ret
+
+leVet:
+
+	movl	$0, %ebx
+
+leTam:
+
+	pushl	$tamanho
+	pushl	$formato
+	call	scanf
+	pushl	$pulaLinha
+	call	printf
+	addl	$12, %esp		# desfaz os ultimos 3 push's
+	movl	tamanho, %ecx
+	cmpl	$0, %ecx
+	jle	leTam
+	cmpl	maxTam,	%ecx
+	jg	leTam
+	ret
+
+
+
+
+
+
+
+.globl	_start
+_start:
+
+	pushl	$titulo
+	call	printf
+	addl	$4, %esp
+
+
+#erroMaior:
+
+	#pushl	$msgErroMaior
+	#call	printf
+	#jmp	leNum
+
+
+#erroMenor:
+
+	#pushl	$msgErroMenor
+	#call	printf
+	#jmp	leNum
+
+
+le_n:
+
+	pushl	$pedeTam
+	call	printf
+	addl	$4, %esp
+	call	leTam
+	movl	%ecx, n
+
+
+leVetor:
+
+	pushl	$1
+	pushl	$leituraVetor
+	call	printf
+	addl	$8, %esp
+	movl	$vetor, %edi
+	movl	n, %ecx
+	call	leVet
+
+mostraVetor:
+
+	pushl	$1
+	pushl	$vetorLido
+	call	printf
+	addl	$8, %esp
+	movl	$vetor, %edi
+	movl	n, %ecx
+	call	mostraVet
+
+
+
+leNum:
+
+	incl	%ebx
+	pushl	%edi			#backup de edi
+	pushl	%ecx			#backup de ecx
+	pushl	%ebx			#backup	de ebx
+
+	pushl	$pedeNumero
+	call	printf
+	pushl	$elemento
+	pushl	$formato
+	call	scanf
+	pushl	$pulaLinha
+	call	printf
+	addl	$16, %esp
+
+	popl	%ebx			# Recupera registradores no backup
+	popl	%ecx
+	popl	%edi
+	movl	elemento, %eax
+	movl	%eax, (%edi)		#poem numero na posicao corrente do vetor
+	addl	$4, %edi		#avanca uma posicao no vetor, pois cada elemento eh 4 bytes
+	loop	leNum
+
+
+fim:
+	pushl	$limpaBuffer
+	call	scanf
+	pushl	$0
+	call	exit
