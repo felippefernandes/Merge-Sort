@@ -1,0 +1,130 @@
+.section .data	
+	
+titulo: 	.asciz "\n *** PROGRAMA Merge Sort 1.0 *** \n \n"
+
+pedeTam:	.asciz "\nDigite o tamanho do vetor (0 < TAM <= 20) => \n"
+
+pedeNumero: 	.asciz "\nInsira primeiro elemento %d => \n"
+
+leituraVetor: 	.asciz "\n LEITURA DO VETOR: \n"
+
+vetorLido: 	.asciz "\n VETOR %d LIDO! \n"
+
+formatoIn: 	.asciz "%d"
+
+formatoOut: 	.asciz "%d"
+
+pulalinha: 	.asciz "\n"
+
+limpaBuffer:	.string "%*c"
+
+maxTam:		.int 20
+	
+tamanho: 	.int 0
+
+n:		.int 0
+
+num: 		.int 0
+
+vetor: 		.space 204 
+
+
+.section .text
+
+leTam:
+	pushl $tamanho
+	pushl $formatoIn
+	call scanf
+	pushl $pulalinha
+	call printf
+	addl $12, %esp
+	movl tamanho, %ecx
+	cmpl $0, %ecx
+	jle leTam
+	cmpl maxTam, %ecx
+	jg leTam
+	ret
+
+leVet:
+	movl $0, %ebx
+
+volta1:
+	incl %ebx
+	pushl %edi
+	pushl %ecx
+	pushl %ebx
+	pushl $pedeNumero
+	call printf
+	pushl $num
+	pushl $formatoIn
+	call scanf
+	addl $12, %esp
+	popl %ebx
+	popl %ecx
+	popl %edi
+	movl num, %eax
+	movl %eax, (%edi)
+	addl $4, %edi
+	loop volta1
+	ret
+
+mostraVet:
+	pushl %edi
+	pushl %ecx
+	movl (%edi), %eax
+	pushl %eax
+	pushl $formatoOut
+	call printf
+	addl $8, %esp
+	popl %ecx
+	popl %edi
+	addl $4, %edi
+	loop mostraVet
+	pushl $pulalinha
+	call printf
+	addl $4, %esp
+	ret
+
+
+acabou: 
+	ret
+
+.globl _start
+_start:
+
+	pushl $titulo
+	call printf
+	addl $4, %esp
+	
+le_n:
+	pushl $pedeTam
+	call printf
+	addl $4, %esp	
+	call leTam
+	movl %ecx, n
+
+le_Vetor:
+	pushl $1
+	pushl $leituraVetor
+	call printf
+	addl $8, %esp
+	movl $vetor, %edi
+	movl n, %ecx
+	call leVet
+
+
+mostra_vetor:
+	pushl $1
+	pushl $vetorLido
+	call printf
+	addl $8, %esp
+	movl $vetor, %edi
+	movl n, %ecx
+	call mostraVet
+
+fim:
+	
+	pushl $limpaBuffer
+	call scanf
+	pushl $0
+	call exit
